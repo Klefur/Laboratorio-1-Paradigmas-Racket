@@ -41,6 +41,28 @@
           #f)
       #f))
 
+;selectores
+
+(define (getPosition pixel)
+  (if (or (pixhex-d? pixel) (pixbit-d? pixel) (pixrgb-d? pixel))
+      (list (car pixel) (cadr pixel))
+      null))
+
+(define (getBit pixel)
+  (if (pixbit-d? pixel)
+      (caddr pixel)
+      null))
+
+(define (getRgb pixel)
+  (if (pixrgb-d? pixel)
+      (list (caddr pixel) (cadddr pixel) (car(cddddr pixel)))
+      null))
+
+(define (getHex pixel)
+  (if (pixbit-d? pixel)
+      (caddr pixel)
+      null))
+
 ;exportacion de funciones para su posterior uso
 
 (provide (all-defined-out))

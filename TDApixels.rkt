@@ -13,20 +13,14 @@
 (define (pixbit-d? pixel)
   (if (list? pixel)
       (if (= (length pixel) 4)
-          (if (or (= (caddr pixel) 1) (= (caddr pixel) 0))
-              #t
-              #f)
+          (or (= (caddr pixel) 1) (= (caddr pixel) 0))
           #f)
       #f))
 
 (define (pixrgb-d? pixel)
   (if (list? pixel)
       (if (= (length pixel) 6)
-          (if (and (>= (caddr pixel) 0) (<= (caddr pixel) 255)
-               (>= (cadddr pixel) 0) (<= (cadddr pixel) 255)
-               (>= (car (cddddr pixel)) 0) (<= (car (cddddr pixel)) 255))
-              #t
-              #f)
+          (and (>= (caddr pixel) 0) (<= (caddr pixel) 255) (>= (cadddr pixel) 0) (<= (cadddr pixel) 255) (>= (car (cddddr pixel)) 0) (<= (car (cddddr pixel)) 255))
           #f)
       #f))
 
@@ -34,16 +28,14 @@
   (if (list? pixel)
       (if (= (length pixel) 4)
           (if (string? (caddr pixel))
-              (if (and (= (car pixel) "#") (= (length pixel) 7))
-                  #t
-                  #f)
+              (and (= (car pixel) "#") (= (length pixel) 7))
               #f)
           #f)
       #f))
 
 ;selectores
 
-(define (getPosition pixel)
+(define (getPos pixel)
   (if (or (pixhex-d? pixel) (pixbit-d? pixel) (pixrgb-d? pixel))
       (list (car pixel) (cadr pixel))
       null))
@@ -62,6 +54,13 @@
   (if (pixbit-d? pixel)
       (caddr pixel)
       null))
+
+(define (getDepth pixel)
+  (if (or (pixhex-d? pixel) (pixbit-d? pixel))
+      (cadddr pixel)
+      (if (pixrgb-d? pixel)
+          (cadr (cddddr pixel))
+          null)))
 
 ;exportacion de funciones para su posterior uso
 

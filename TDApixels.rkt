@@ -4,7 +4,7 @@
 
 (define (pixbit-d x y bit d) (list x y bit d))
 
-(define (pixrgb-d x y r g b d) (list x y r g b d))
+(define (pixrgb-d x y r g b d) (list x y (list r g b) d))
 
 (define (pixhex-d x y hex d) (list x y hex d))
 
@@ -20,7 +20,9 @@
 (define (pixrgb-d? pixel)
   (if (list? pixel)
       (if (= (length pixel) 6)
-          (and (>= (caddr pixel) 0) (<= (caddr pixel) 255) (>= (cadddr pixel) 0) (<= (cadddr pixel) 255) (>= (car (cddddr pixel)) 0) (<= (car (cddddr pixel)) 255))
+          (andmap (lambda (c) (if (and (c >= 0) (c <= 255))
+                                  #t
+                                  #f)) (caddr pixel))
           #f)
       #f))
 
@@ -35,32 +37,41 @@
 
 ;selectores
 
-(define (getPos pixel)
+(define (getPosX pixel)
   (if (or (pixhex-d? pixel) (pixbit-d? pixel) (pixrgb-d? pixel))
-      (list (car pixel) (cadr pixel))
+      (car pixel)
       null))
 
-(define (getBit pixel)
-  (if (pixbit-d? pixel)
-      (caddr pixel)
+(define (getPosY pixel)
+  (if (or (pixhex-d? pixel) (pixbit-d? pixel) (pixrgb-d? pixel))
+      (cadr pixel)
       null))
 
-(define (getRgb pixel)
-  (if (pixrgb-d? pixel)
-      (list (caddr pixel) (cadddr pixel) (car(cddddr pixel)))
-      null))
-
-(define (getHex pixel)
-  (if (pixbit-d? pixel)
+(define (getColor pixel)
+  (if (or (pixhex-d? pixel) (pixbit-d? pixel) (pixrgb-d? pixel))
       (caddr pixel)
       null))
 
 (define (getDepth pixel)
-  (if (or (pixhex-d? pixel) (pixbit-d? pixel))
+  (if (or (pixhex-d? pixel) (pixbit-d? pixel) (pixrgb-d? pixel))
       (cadddr pixel)
-      (if (pixrgb-d? pixel)
-          (cadr (cddddr pixel))
-          null)))
+      null))
+
+; modificadores
+
+(define (setPosX pixel x)
+  (cond
+    [(pixbit-d? pixel) (pixbit-d x (getPosY pixel) (getColor pixel) (getDepth pixel))]
+    [(pixrgb-d? pixel) (pixrgb-d x (getPosY pixel) (getColor pixel) (getDepth pixel))]
+    [(pixhex-d? pixel) (pixhex-d x (getPosY pixel) (getColor pixel) (getDepth pixel))]
+    [else pixel]))
+
+(define (setPosY pixel y)
+  (cond
+    [(pixbit-d? pixel) (pixbit-d (getPosX pixel) y (getColor pixel) (getDepth pixel))]
+    [(pixrgb-d? pixel) (pixrgb-d (getPosX pixel) y (getColor pixel) (getDepth pixel))]
+    [(pixhex-d? pixel) (pixhex-d (getPosX pixel) y (getColor pixel) (getDepth pixel))]
+    [else pixel]))
 
 ;exportacion de funciones para su posterior uso
 

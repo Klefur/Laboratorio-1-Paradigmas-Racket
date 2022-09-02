@@ -13,16 +13,18 @@
 (define (pixbit-d? pixel)
   (if (list? pixel)
       (if (= (length pixel) 4)
-          (or (= (caddr pixel) 1) (= (caddr pixel) 0))
+          (if (number? (caddr pixel))
+              (or (= (caddr pixel) 1) (= (caddr pixel) 0))
+              #f)
           #f)
       #f))
 
 (define (pixrgb-d? pixel)
   (if (list? pixel)
-      (if (= (length pixel) 6)
-          (andmap (lambda (c) (if (and (c >= 0) (c <= 255))
-                                  #t
-                                  #f)) (caddr pixel))
+      (if (= (length pixel) 4)
+          (if (list? (caddr pixel))
+              (andmap (lambda (c) (and (>= c 0) (<= c 255))) (caddr pixel))
+              #f)
           #f)
       #f))
 

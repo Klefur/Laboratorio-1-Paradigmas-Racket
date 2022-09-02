@@ -100,11 +100,14 @@
              (lambda1 (nextPix pixeles)))))
   (setPixeles (image (getLenX imagen) (getLenY imagen)) (lambda1 (getPixeles imagen))))
 
-(define (rgb->hex imagen) (+ (* 16 15) 15))
+(define (imgRGB->imgHex imagen)
+  (if (pixmap? imagen)
+      (setPixeles (image (getLenX imagen) (getLenY imagen)) (map pixrgb->pixhex (getPixeles imagen)))
+      imagen))
 
 (define img1 (image 2 2 (pixbit-d 0 0 1 10)(pixbit-d 0 1 1 10)(pixbit-d 1 0 1 10)(pixbit-d 1 1 1 10)))
 
-(define img2 (image 2 2 (pixrgb-d 0 0 5 5 5 10)(pixrgb-d 0 1 5 5 5 10)
+(define img2 (image 2 2 (pixrgb-d 0 0 55 205 105 10)(pixrgb-d 0 1 5 5 5 10)
                         (pixrgb-d 1 0 5 5 5 10)(pixrgb-d 1 1 5 5 5 10)))
 
 (define img3 (image 4 4

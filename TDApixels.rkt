@@ -75,6 +75,30 @@
     [(pixhex-d? pixel) (pixhex-d (getPosX pixel) y (getColor pixel) (getDepth pixel))]
     [else pixel]))
 
+(define (pixrgb->pixhex pixel)
+  (if (pixrgb-d? pixel)
+      (pixhex-d (getPosX pixel) (getPosY pixel) (string-append "#" (car (rgb->hex pixel)) (cadr (rgb->hex pixel)) (caddr (rgb->hex pixel))) (getDepth pixel))
+      pixel))
+
+; otras funciones
+
+(define (rgb->stringHex numero)
+  (cond
+    [(= numero 10) "A"]
+    [(= numero 11) "B"]
+    [(= numero 12) "C"]
+    [(= numero 13) "D"]
+    [(= numero 14) "E"]
+    [(= numero 15) "F"]
+    [else (number->string numero)]))
+
+(define (rgb->hex pixel)
+  (map (lambda (c)
+         (if (= (remainder c 16) 0)
+             (string-append (rgb->stringHex (/ (- c (remainder c 16)) 16)) "0")
+             (string-append (rgb->stringHex (/ (- c (remainder c 16)) 16)) (rgb->stringHex (remainder c 16)))))
+       (getColor pixel)))
+
 ;exportacion de funciones para su posterior uso
 
 (provide (all-defined-out))

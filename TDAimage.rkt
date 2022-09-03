@@ -2,7 +2,7 @@
 
 ;llamado de tda pixeles
 
-(require "TDAPixels.rkt")
+(require "TDAPixel.rkt")
 
 ; constructor
 
@@ -96,9 +96,11 @@
          pixeles
          (if (and (<= (getPosX (firstPix pixeles)) x1) (<= (getPosY (firstPix pixeles)) y1)
                   (>= (getPosX (firstPix pixeles)) x0) (>= (getPosY (firstPix pixeles)) y0))
-             (cons (firstPix pixeles) (lambda1 (nextPix pixeles)))
+             (cons (setPosY (setPosX (firstPix pixeles) (- (getPosX (firstPix pixeles)) x0)) (- (getPosY (firstPix pixeles)) y0)) (lambda1 (nextPix pixeles)))
              (lambda1 (nextPix pixeles)))))
-  (setPixeles (image (getLenX imagen) (getLenY imagen)) (lambda1 (getPixeles imagen))))
+  (if (and (<= 0 x0) (>= (getLenX imagen) x1) (<= 0 y0) (>= (getLenX imagen) y1))
+      (setPixeles (image (+ (- x1 x0) 1) (+ (- y1 y0) 1)) (lambda1 (getPixeles imagen)))
+      imagen))
 
 (define (imgRGB->imgHex imagen)
   (if (pixmap? imagen)

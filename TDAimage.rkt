@@ -3,6 +3,7 @@
 ;llamado de tda pixeles
 
 (require "TDAPixel.rkt")
+(require "TDAHistogram.rkt")
 
 ; constructor
 
@@ -50,11 +51,6 @@
 (define (getPixeles imagen)
   (if (or (bitmap? imagen) (hexmap? imagen) (pixmap? imagen))
       (caddr imagen)
-      null))
-
-(define (getDepth imagen)
-  (if (or (bitmap? imagen) (hexmap? imagen) (pixmap? imagen))
-      (cadddr imagen)
       null))
 
 (define (firstPix pixeles)
@@ -117,3 +113,7 @@
                     (pixbit-d 1 0 1 10)(pixbit-d 1 1 1 10)(pixbit-d 1 2 1 10)(pixbit-d 1 3 1 10)
                     (pixbit-d 2 0 1 10)(pixbit-d 2 1 1 10)(pixbit-d 2 2 1 10)(pixbit-d 2 3 1 10)
                     (pixbit-d 3 0 1 10)(pixbit-d 3 1 1 10)(pixbit-d 3 2 1 10)(pixbit-d 3 3 1 10)))
+
+;exportacion de funciones para su posterior uso
+
+(provide (all-defined-out))

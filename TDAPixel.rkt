@@ -32,7 +32,7 @@
   (if (list? pixel)
       (if (= (length pixel) 4)
           (if (string? (caddr pixel))
-              (and (= (car pixel) "#") (= (length pixel) 7))
+              (and (equal? (string-ref (caddr pixel) 0) #\#) (= (string-length (caddr pixel)) 7))
               #f)
           #f)
       #f))

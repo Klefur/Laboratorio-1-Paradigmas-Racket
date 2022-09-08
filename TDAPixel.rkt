@@ -64,14 +64,14 @@
 (define (setPosX pixel x)
   (cond
     [(pixbit-d? pixel) (pixbit-d x (getPosY pixel) (getColor pixel) (getDepth pixel))]
-    [(pixrgb-d? pixel) (pixrgb-d x (getPosY pixel) (getColor pixel) (getDepth pixel))]
+    [(pixrgb-d? pixel) (pixrgb-d x (getPosY pixel) (car (getColor pixel)) (cadr (getColor pixel)) (caddr (getColor pixel)) (getDepth pixel))]
     [(pixhex-d? pixel) (pixhex-d x (getPosY pixel) (getColor pixel) (getDepth pixel))]
     [else pixel]))
 
 (define (setPosY pixel y)
   (cond
     [(pixbit-d? pixel) (pixbit-d (getPosX pixel) y (getColor pixel) (getDepth pixel))]
-    [(pixrgb-d? pixel) (pixrgb-d (getPosX pixel) y (getColor pixel) (getDepth pixel))]
+    [(pixrgb-d? pixel) (pixrgb-d (getPosX pixel) y (car (getColor pixel)) (cadr (getColor pixel)) (caddr (getColor pixel)) (getDepth pixel))]
     [(pixhex-d? pixel) (pixhex-d (getPosX pixel) y (getColor pixel) (getDepth pixel))]
     [else pixel]))
 

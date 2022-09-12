@@ -13,6 +13,6 @@ Donde se compone de [TDA Image](https://github.com/Klefur/Laboratorio-1-Paradigm
 Se necesita del programa [Dr.Racket 6.11](https://download.racket-lang.org) o superior para poder ejecutar los códigos del repositorio.
 
 ## Como ejecutar
-Clonar el repositorio para acceder a los archivos de manera mas rapidaL:
+Clonar el repositorio para acceder a los archivos de manera mas rapida:
 ```sh 
 git clone https://github.com/Klefur/Laboratorio-1-Paradigmas-Racket.git```

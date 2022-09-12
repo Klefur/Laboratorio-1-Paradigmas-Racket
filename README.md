@@ -1,11 +1,8 @@
 # Laboratorio-1-Paradigmas-Racket
-**Autor:** Joaquin Saldivia
-
-**Seccion:** 13310-0-A-1
-
-**Fecha de inicio:** 19 de Agosto de 2022
-
-**Fecha de Entrega:** 26 de Septiembre de 2022
+* **Autor:** Joaquin Saldivia
+* **Seccion:** 13310-0-A-1
+* **Fecha de inicio:** 19 de Agosto de 2022
+* **Fecha de Entrega:** 26 de Septiembre de 2022
 
 ## Descripción
 Este es el respositorio del **laboratorio 1** del curso de Paradigmas de Programación. Donde se trabaja el paradigma funcional, a traves del lenguaje de programación Racket, con el proposito de crear una aplicacion estilo photoshop.

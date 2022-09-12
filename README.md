@@ -1,7 +1,10 @@
 # Laboratorio-1-Paradigmas-Racket
 **Autor: Joaquin Saldivia**
+
 **Seccion: 13310-0-A-1**
+
 **Fecha de inicio:** 19 de Agosto de 2022
+
 **Fecha de Entrega:** 26 de Septiembre de 2022
 
 ## Descripción

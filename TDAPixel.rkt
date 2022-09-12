@@ -217,6 +217,32 @@
              (string-append (rgb->stringHex (/ (- c (remainder c 16)) 16)) (rgb->stringHex (remainder c 16)))))
        (getColor pixel)))
 
+;Dom: lista del pixbit-d
+;Rec: string
+;Descripcion: transforma un pixel bit a string
+(define (pixbit->string pixel)
+  (if (pixbit-d? pixel)
+      (if (= (getColor pixel) 1)
+          "#FFFFFF"
+          "#000000")
+      " "))
+
+;Dom: lista del pixrgb-d
+;Rec: string
+;Descripcion: transforma un pixel rgb a string
+(define (pixrgb->string pixel)
+  (if (pixrgb-d? pixel)
+      (getColor (pixrgb->pixhex pixel))
+      " "))
+
+;Dom: lista del pixhex-d
+;Rec: string
+;Descripcion: transforma un pixel hex a string
+(define (pixhex->string pixel)
+  (if (pixhex-d? pixel)
+      (getColor pixel)
+      " "))
+
 ;exportacion de funciones para su posterior uso
 
 (provide (all-defined-out))

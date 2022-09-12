@@ -29,37 +29,35 @@
 ;Rec: Boolean
 ;Descripcion: Se verifica si la imagen esta compuesta de pixeles del tipo pixbit-d
 (define (bitmap? imagen)
-  (if (= (length (caddr imagen)) (* (car imagen) (cadr imagen)))
-      (pixbit-d? (car (caddr imagen)))
+  (if (<= (length (caddr imagen)) (* (car imagen) (cadr imagen)))
+      (andmap pixbit-d? (caddr imagen))
       #f))
 
 ;Dom: lista del tipo image
 ;Rec: Boolean
 ;Descripcion: Se verifica si la imagen esta compuesta de pixeles del tipo pixrgb-d
 (define (pixmap? imagen)
-  (if (= (length (caddr imagen)) (* (car imagen) (cadr imagen)))
-      (pixrgb-d? (car (caddr imagen)))
+  (if (<= (length (caddr imagen)) (* (car imagen) (cadr imagen)))
+      (andmap pixrgb-d? (caddr imagen))
       #f))
 
 ;Dom: lista del tipo image
 ;Rec: Boolean
 ;Descripcion: Se verifica si la imagen esta compuesta de pixeles del tipo pixhex-d
 (define (hexmap? imagen)
-  (if (= (length (caddr imagen)) (* (car imagen) (cadr imagen)))
-      (pixhex-d? (car (caddr imagen)))
+  (if (<= (length (caddr imagen)) (* (car imagen) (cadr imagen)))
+      (andmap pixhex-d? (caddr imagen))
       #f))
 
 ;Dom: lista del tipo image
 ;Rec: Boolean
 ;Descripcion: Se verifica si la imagen esta comprimida
-(define (compressed? imagen)
-  (= (length (imagen)) 4))
+(define (compressed? imagen) (if (image? imagen) (= (length imagen) 4) #f))
 
 ;Dom: lista del tipo image
 ;Rec: Boolean
 ;Descripcion: Se verifica si la imagen tiene un formato de pixeles valido
-(define (image? imagen)
-  (or (pixmap? imagen) (bitmap? imagen) (hexmap? imagen)))
+(define (image? imagen) (or (pixmap? imagen) (bitmap? imagen) (hexmap? imagen)))
  
 ;-----------------------------------SELECTORES-----------------------------------------------------------------
 
@@ -87,15 +85,24 @@
       (caddr imagen)
       null))
 
-;Dom: lista de pixeles
+;Dom: lista del tipo image
+;Rec: [int | lista | hex]
+;Descripcion: entrega el valor del color si la imagen esta comprimida
+(define (getCompressV imagen)
+  (if (= (length imagen) 4)
+      (cadddr imagen)
+      null))
+
+;Dom: lista de pixeles [pixbit-d | pixrgb-d | pixhex-d]
 ;Rec: [pixbit-d | pixrgb-d | pixhex-d]
 ;Descripcion: entrega el primer pixel de una lista de pixeles
 (define (firstPix pixeles)
   (if (list? pixeles)
       (car pixeles)
       null))
-;Dom: lista de pixeles
-;Rec: [pixbit-d | pixrgb-d | pixhex-d]
+
+;Dom: lista de pixeles [pixbit-d | pixrgb-d | pixhex-d]
+;Rec: lista de pixeles [pixbit-d | pixrgb-d | pixhex-d]
 ;Descripcion: entrega el resto pixeles de una lista de pixeles
 (define (nextPix pixeles)
   (if (list? pixeles)
@@ -145,7 +152,7 @@
   (define (lambda1 pixeles)
      (if (null? pixeles)
          null
-         (cons (setPosX (firstPix pixeles) (- (getLenX imagen) (+ (getPosX (firstPix pixeles)) 1))) (lambda1 (nextPix pixeles)))))
+         (cons (setPosY (firstPix pixeles) (- (getLenY imagen) (+ (getPosY (firstPix pixeles)) 1))) (lambda1 (nextPix pixeles)))))
   (if (image? imagen)
       (setPixeles imagen (lambda1 (getPixeles imagen)))
       null))
@@ -159,7 +166,7 @@
   (define (lambda1 pixeles)
      (if (null? pixeles)
          null
-         (cons (setPosY (firstPix pixeles) (- (getLenY imagen) (+ (getPosY (firstPix pixeles)) 1))) (lambda1 (nextPix pixeles)))))
+         (cons (setPosX (firstPix pixeles) (- (getLenX imagen) (+ (getPosX (firstPix pixeles)) 1))) (lambda1 (nextPix pixeles)))))
   (if (image? imagen)
       (setPixeles imagen (lambda1 (getPixeles imagen)))
       null))
@@ -199,7 +206,7 @@
   (define (histogramR pixeles histo)
     (if (null? pixeles)
         histo
-        (histogramR (nextPix pixeles) (agregar (car pixeles) histo))))
+        (histogramR (nextPix pixeles) (agregar (firstPix pixeles) histo))))
   (if (image? imagen)
       (histogramR (getPixeles imagen) (list))
       imagen))
@@ -242,11 +249,50 @@
       (pixrgb-d (getPosX pixrgb) (getPosY pixrgb) (- 255 (getR pixrgb)) (- 255 (getG pixrgb)) (- 255 (getB pixrgb)) (getDepth pixrgb))
       null))
 
-;Dom: funcion x funcion x funcion x pixrgb
+;Dom: funcion X funcion X funcion X pixrgb
 ;Rec: pixrgb
 ;Descripcion: se elije un canal del pixel y se le introduce una funcion de operacion para ese canal modificando el color del pixel
 (define (adjustChannel f1 f2 f3) (lambda (p)
   (f2 p (f3 (f1 p)))))
+
+;Dom: image X funcion
+;Rec: string
+;Descripcion: se transforma la imagen a string para posteriormente mostrarla en consola
+(define (image->string imagen f)
+  (formarString imagen "" 0 0 (- (getLenX imagen) 1) (- (getLenY imagen) 1) f))
+
+;Dom: lista del tipo imagen
+;Rec: lista de listas del tipo imagen
+;Descripcion: crea una lista de imagenes donde cada imagen tiene la misma profundidad
+(define (depthLayers imagen)
+  (define (depthogram pixeles depto)
+     (if (null? pixeles)
+        depto
+        (depthogram (nextPix pixeles) (agregarDepto (firstPix pixeles) depto))))
+  (define (seteo imagen color f)
+    (setPixeles imagen (rellenarPix (getPixeles imagen) 0 0 (- (getLenX imagen) 1) (- (getLenY imagen) 1) color f (getDepth (firstPix (getPixeles imagen))))))
+  (if (image? imagen)
+      (cond
+        [(bitmap? imagen) (map (lambda (img) (seteo img 1 pixbit-d))
+                               (map (lambda (pixs) (setPixeles (image (getLenX imagen) (getLenY imagen)) pixs)) (depthogram (getPixeles imagen) (list))))]
+        [(pixmap? imagen) (map (lambda (img) (seteo img (list 255 255 255) pixrgb-d))
+                               (map (lambda (pixs) (setPixeles (image (getLenX imagen) (getLenY imagen)) pixs)) (depthogram (getPixeles imagen) (list))))]
+        [else (map (lambda (img) (seteo img "#FFFFFF" pixhex-d))
+                   (map (lambda (pixs) (setPixeles (image (getLenX imagen) (getLenY imagen)) pixs)) (depthogram (getPixeles imagen) (list))))])
+      null))
+
+;Dom: lista del tipo image
+;Rec: lista del tipo image
+;Descripcion: descomprime la imagen rellenando los pixeles faltantes con el color guardado
+(define (decompress imagen)
+  (define (seteo imagen f)
+    (setPixeles imagen (rellenarPix (getPixeles imagen) 0 0 (- (getLenX imagen) 1) (- (getLenY imagen) 1) (getCompressV imagen) f 10)))
+  (if (compressed? imagen)
+      (cond
+        [(bitmap? imagen) (seteo imagen pixbit-d)]
+        [(pixmap? imagen) (seteo imagen pixrgb-d)]
+        [else (seteo imagen pixhex-d)])
+      null))
 
 ;Dom: lista
 ;Rec: lista
@@ -258,11 +304,11 @@
     (if (null? histograma)
         mayor
         (if (> (cadr (car histograma)) (cadr mayor))
-            (mRepeat (cdr histograma) (car histograma))
-            (mRepeat (cdr histograma) mayor))))
+            (getMR (cdr histograma) (car histograma))
+            (getMR (cdr histograma) mayor))))
   (getMR (cdr histograma) (car histograma)))
 
-;Dom: lista
+;Dom: pixel X lista
 ;Rec: boolean
 ;Descripcion: entrega un booleando que indica si esta un color dentro de la lista histograma
 ;Recursion: cola
@@ -274,7 +320,7 @@
           #t
           (estaC? pixel (cdr histograma)))))
 
-;Dom: lista
+;Dom: pixel X lista
 ;Rec: lista
 ;Descripcion: la funcion agrega el color a la lista histograma en caso de no estar y si esta se agrega uno a donde corresponde
 (define (agregar pixel histograma)
@@ -282,7 +328,7 @@
       (agregar1 (getColor pixel) histograma)
       (append histograma (list (list (getColor pixel) 1)))))
 
-;Dom: lista
+;Dom: [int | string | lista] X lista
 ;Rec: lista
 ;Descripcion: agrega 1 al color que corresponde
 ;Recursion: natural
@@ -294,26 +340,81 @@
       (cons (list (car (car histograma)) (+ (cadr (car histograma)) 1)) (agregar1 color (cdr histograma)))
       (cons (car histograma) (agregar1 color (cdr histograma))))))
 
+;Dom: pixel X lista
+;Rec: lista
+;Descripcion: la funcion agrega el pixel a la lista depto en caso de no estar y si esta se agrega a la lista correspondiente
+(define (agregarDepto pixel depto)
+  (if (estaDepto? pixel depto)
+      (agregarD pixel depto)
+      (append depto (list (list pixel)))))
+
+;Dom: lista
+;Rec: lista
+;Descripcion: agrega el pixel a la lista que corresponde
+;Recursion: natural
+;Justificacion: facilita la modificacion directa de alguno de los elementos de la lista ya que se trabaja uno a uno
+(define (agregarD pixel depto)
+  (if (null? depto)
+      null
+      (if (equal? (getDepth pixel) (getDepth (car (car depto))))
+      (cons (append (car depto) (list pixel)) (agregarD pixel (cdr depto)))
+      (cons (car depto) (agregarD pixel (cdr depto))))))
+
+;Dom: lista
+;Rec: boolean
+;Descripcion: entrega un booleando que indica si esta la profundidad dentro de la lista depto
+;Recursion: cola
+;Justificacion: al no necesitar estados pendientes se recorre la lista hasta encontrar el color o caso contrario retornar falso
+(define (estaDepto? pixel depto)
+  (if (null? depto)
+      #f
+      (if (equal? (getDepth pixel) (getDepth (car (car depto))))
+          #t
+          (estaDepto? pixel (cdr depto)))))
+
 ;Dom: int
 ;Rec: int
 ;Descripcion: agrega 1
 (define (incCh c) (+ c 1))
 
-; img prueba
+;Dom: lista de pixeles
+;Rec: pixel
+;Descripcion: entrega el pixel de una posicion especifica
+;Recursion: cola
+;Justificacion: permite recorrer y entregar un pixel de una posicion especifica
+(define (entregaP pixeles x y)
+  (if (null? pixeles)
+      null
+      (if (and (= (getPosX (firstPix pixeles)) x) (= (getPosY (firstPix pixeles)) y))
+               (firstPix pixeles)
+               (entregaP (nextPix pixeles) x y))))
 
-(define img1 (image 2 2 (pixbit-d 0 0 1 20)(pixbit-d 1 0 0 10)(pixbit-d 0 1 1 20)(pixbit-d 1 1 1 10)))
+;Dom: image X string X int X int X int X int X funcion
+;Rec: string
+;Descripcion: entrega la imagen en formato string
+;Recursion: cola
+;Justificacion: sirve para construir el string al mismo tiempo que se recorre la imagen
+(define (formarString img str x0 y0 x1 y1 f)
+  (if (> y0 y1)
+      str
+      (if (> x0 x1)
+          (formarString img (string-append str "\n") 0 (+ y0 1) x1 y1 f)
+          (formarString img (string-append str (f (entregaP (getPixeles img) x0 y0)) " ") (+ x0 1) y0 x1 y1 f))))
 
-(define img2 (image 2 2 (pixrgb-d 0 0 55 205 105 10)(pixrgb-d 1 0 5 5 5 10)
-                    (pixrgb-d 0 1 5 5 5 10)(pixrgb-d 1 1 5 5 5 10)))
+;Dom: lista de pixeles X int X int X int X int X [int | string | lista] X funcion
+;Rec: lista de pixeles
+;Descripcion: rellena una lista de pixeles 
+;Recursion: natural
+;Justificacion: se va contruyendo la lista de pixeles a medida que se llama la funcion facilitando crear un pixel que no existia antes en la lista
+(define (rellenarPix pixeles x0 y0 x1 y1 color f depth)
+  (if (> y0 y1)
+      null
+      (if (> x0 x1)
+          (rellenarPix pixeles 0 (+ y0 1) x1 y1 color f depth)
+          (if (null? (entregaP pixeles x0 y0))
+              (cons (f x0 y0 color depth) (rellenarPix pixeles (+ x0 1) y0 x1 y1 color f depth))
+              (cons (entregaP pixeles x0 y0) (rellenarPix pixeles (+ x0 1) y0 x1 y1 color f depth))))))
 
-(define img3 (image 4 4
-                    (pixbit-d 0 0 1 10)(pixbit-d 1 0 0 10)(pixbit-d 2 0 1 10)(pixbit-d 3 0 1 10)
-                    (pixbit-d 0 1 1 10)(pixbit-d 1 1 1 10)(pixbit-d 2 1 1 10)(pixbit-d 3 1 1 10)
-                    (pixbit-d 0 2 1 10)(pixbit-d 1 2 1 10)(pixbit-d 2 2 1 10)(pixbit-d 3 2 1 10)
-                    (pixbit-d 0 3 1 10)(pixbit-d 1 3 1 10)(pixbit-d 2 3 1 10)(pixbit-d 3 3 1 10)))
+;exportacion de funciones para su posterior uso
 
-(define img4 (image 3 2
-                    (pixbit-d 0 0 1 10)(pixbit-d 1 0 1 10)(pixbit-d 2 0 1 10)
-                    (pixbit-d 0 1 1 10)(pixbit-d 1 1 1 10)(pixbit-d 2 1 1 10)))
-
-(define prueba (getPixeles img3))
+(provide (all-defined-out))

@@ -14,4 +14,5 @@ Se necesita del programa [Dr.Racket 6.11](https://download.racket-lang.org) o su
 
 ## Como ejecutar
 Clonar el repositorio para acceder a los archivos de manera mas rapidaL:
-```sh git clone https://github.com/Klefur/Laboratorio-1-Paradigmas-Racket.git```
+```sh 
+git clone https://github.com/Klefur/Laboratorio-1-Paradigmas-Racket.git```

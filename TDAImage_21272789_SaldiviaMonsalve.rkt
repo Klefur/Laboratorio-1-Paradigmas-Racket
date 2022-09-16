@@ -2,7 +2,7 @@
 
 ;llamado de tda pixeles
 
-(require "TDAPixel.rkt")
+(require "TDAPixel_21272789_SaldiviaMonsalve.rkt")
 ;-----------------------------------TDA IMAGE-------------------------------------------------------------------
 
 ;-----------------------------------REPRESENTACION--------------------------------------------------------------
@@ -97,7 +97,7 @@
 ;Rec: [pixbit-d | pixrgb-d | pixhex-d]
 ;Descripcion: entrega el primer pixel de una lista de pixeles
 (define (firstPix pixeles)
-  (if (list? pixeles)
+  (if (and (list? pixeles) (not (null? pixeles)))
       (car pixeles)
       null))
 
@@ -105,7 +105,7 @@
 ;Rec: lista de pixeles [pixbit-d | pixrgb-d | pixhex-d]
 ;Descripcion: entrega el resto pixeles de una lista de pixeles
 (define (nextPix pixeles)
-  (if (list? pixeles)
+  (if (and (list? pixeles) (not (null? pixeles)))
       (cdr pixeles)
       null))
 
@@ -216,16 +216,18 @@
 ;Descripcion: rota una imagen en 90° en sentido horario
 (define (rotate90 imagen)
   (if (image? imagen)
-      (setPixeles imagen (map (lambda (p) (setPosX (setPosY p (getPosX p)) (- (- (getLenY imagen) 1) (getPosY p)))) (getPixeles imagen)))
+      (setPixeles (image (getLenY imagen) (getLenX imagen)) (map (lambda (p) (setPosX (setPosY p (getPosX p)) (- (- (getLenY imagen) 1) (getPosY p)))) (getPixeles imagen)))
       null))
 
 ;Dom: lista del tipo image
 ;Rec: lista del tipo image
 ;Descripcion: comprime una imagen eliminando los pixeles mas repetidos
 (define (compress imagen)
-  (setCompressV (setPixeles (image (getLenX imagen) (getLenY imagen))
-  (filter (lambda (pixel) (not (equal? (car (getMayor (histogram imagen))) (getColor pixel)))) (getPixeles imagen)))
-  (car (getMayor (histogram imagen)))))
+  (if (compressed? imagen)
+      imagen
+      (setCompressV (setPixeles (image (getLenX imagen) (getLenY imagen))
+                                (filter (lambda (pixel) (not (equal? (car (getMayor (histogram imagen))) (getColor pixel)))) (getPixeles imagen)))
+                    (car (getMayor (histogram imagen))))))
 
 ;Dom: lista del tipo image
 ;Rec: lista del tipo image
@@ -259,7 +261,7 @@
 ;Rec: string
 ;Descripcion: se transforma la imagen a string para posteriormente mostrarla en consola
 (define (image->string imagen f)
-  (formarString imagen "" 0 0 (- (getLenX imagen) 1) (- (getLenY imagen) 1) f))
+  (string-append (formarString imagen "" 0 0 (- (getLenX imagen) 1) (- (getLenY imagen) 1) f) "\n"))
 
 ;Dom: lista del tipo imagen
 ;Rec: lista de listas del tipo imagen
@@ -412,7 +414,9 @@
       (if (> x0 x1)
           (rellenarPix pixeles 0 (+ y0 1) x1 y1 color f depth)
           (if (null? (entregaP pixeles x0 y0))
-              (cons (f x0 y0 color depth) (rellenarPix pixeles (+ x0 1) y0 x1 y1 color f depth))
+              (cond
+                [(pixrgb-d? (firstPix pixeles)) (cons (f x0 y0 (car color) (cadr color) (caddr color) depth) (rellenarPix pixeles (+ x0 1) y0 x1 y1 color f depth))]
+                [else (cons (f x0 y0 color depth) (rellenarPix pixeles (+ x0 1) y0 x1 y1 color f depth))])
               (cons (entregaP pixeles x0 y0) (rellenarPix pixeles (+ x0 1) y0 x1 y1 color f depth))))))
 
 ;exportacion de funciones para su posterior uso

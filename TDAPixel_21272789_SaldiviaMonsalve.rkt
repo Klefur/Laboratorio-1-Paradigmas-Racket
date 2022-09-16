@@ -156,7 +156,7 @@
 ;Rec: lista del tipo pixrgb-d
 ;Descripcion: modifica el color rojo de un pixrgb-d
 (define (setR pixel R)
-  (if (and (pixrgb-d? pixel) (or (<= R 255) (>= R 0)))
+  (if (and (pixrgb-d? pixel) (and (<= R 255) (>= R 0)))
       (pixrgb-d (getPosX pixel) (getPosY pixel) R (getG pixel) (getB pixel) (getDepth pixel))
       pixel))
 
@@ -164,7 +164,7 @@
 ;Rec: lista del tipo pixrgb-d
 ;Descripcion: modifica el color verde de un pixrgb-d
 (define (setG pixel G)
-  (if (and (pixrgb-d? pixel) (or (<= G 255) (>= G 0)))
+  (if (and (pixrgb-d? pixel) (and (<= G 255) (>= G 0)))
       (pixrgb-d (getPosX pixel) (getPosY pixel) (getR pixel) G (getB pixel) (getDepth pixel))
       pixel))
 
@@ -172,7 +172,7 @@
 ;Rec: lista del tipo pixrgb-d
 ;Descripcion: modifica el color azul de un pixrgb-d
 (define (setB pixel B)
-  (if (and (pixrgb-d? pixel) (or (<= B 255) (>= B 0)))
+  (if (and (pixrgb-d? pixel) (and (<= B 255) (>= B 0)))
       (pixrgb-d (getPosX pixel) (getPosY pixel) (getR pixel) (getG pixel) B (getDepth pixel))
       pixel))
 
@@ -222,9 +222,7 @@
 ;Descripcion: transforma un pixel bit a string
 (define (pixbit->string pixel)
   (if (pixbit-d? pixel)
-      (if (= (getColor pixel) 1)
-          "#FFFFFF"
-          "#000000")
+      (number->string (getColor pixel))
       " "))
 
 ;Dom: lista del pixrgb-d
@@ -233,7 +231,7 @@
 (define (pixrgb->string pixel)
   (if (pixrgb-d? pixel)
       (getColor (pixrgb->pixhex pixel))
-      " "))
+      "       "))
 
 ;Dom: lista del pixhex-d
 ;Rec: string
@@ -241,7 +239,7 @@
 (define (pixhex->string pixel)
   (if (pixhex-d? pixel)
       (getColor pixel)
-      " "))
+      "       "))
 
 ;exportacion de funciones para su posterior uso
 

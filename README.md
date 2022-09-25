@@ -7,7 +7,7 @@
 ## Descripción
 Este es el respositorio del **laboratorio 1** del curso de Paradigmas de Programación. Donde se trabaja el paradigma funcional, a traves del lenguaje de programación Racket, con el proposito de crear una aplicacion estilo photoshop.
 
-Donde se compone de [TDA Image](https://github.com/Klefur/Laboratorio-1-Paradigmas-Racket/blob/main/TDAimage.rkt) donde se define la construccion de la imagen junto con todas sus funciones modificadoras, [TDA Pixel](https://github.com/Klefur/Laboratorio-1-Paradigmas-Racket/blob/main/TDAPixel.rkt) donde se establecen los tipos de pixeles que se usaran en las imagenes ademas de sus respectivos modificadores, se logro hacer **22/22 funciones**.
+Donde se compone de [TDA Image](https://github.com/Klefur/Laboratorio-1-Paradigmas-Racket/blob/main/TDAimage_21272789_JoaquinSaldivia.rkt) donde se define la construccion de la imagen junto con todas sus funciones modificadoras, [TDA Pixel](https://github.com/Klefur/Laboratorio-1-Paradigmas-Racket/blob/main/TDAPixel_21272789_JoaquinSaldivia.rkt) donde se establecen los tipos de pixeles que se usaran en las imagenes ademas de sus respectivos modificadores, se logro hacer **22/22 funciones**.
 
 ## Prerrequisitos
 Se necesita del programa [Dr.Racket 6.11](https://download.racket-lang.org) o superior para poder ejecutar los códigos del repositorio.
@@ -17,4 +17,4 @@ Clonar el repositorio para acceder a los archivos de manera mas rapida:
 ```sh 
 git clone https://github.com/Klefur/Laboratorio-1-Paradigmas-Racket.git
 ```
-luego teniendo los 3 archivos en una misma carpeta abrir el archivo de pruebas y ejecutar, para pruebas propias se recomienda la creacion de imagenes homogeneas para una aplicacion correcta de las funciones
+luego teniendo los 3 archivos en una misma carpeta abrir el [archivo de pruebas](https://github.com/Klefur/Laboratorio-1-Paradigmas-Racket/blob/main/pruebas_21272789_JoaquinSaldivia.rkt) y ejecutar, para pruebas propias se recomienda la creacion de imagenes homogeneas para una aplicacion correcta de las funciones

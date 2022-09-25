@@ -17,4 +17,4 @@ Clonar el repositorio para acceder a los archivos de manera mas rapida:
 ```sh 
 git clone https://github.com/Klefur/Laboratorio-1-Paradigmas-Racket.git
 ```
-luego teniendo los 3 archivos en una misma carpeta abrir el archivo de pruebas y ejecutar
+luego teniendo los 3 archivos en una misma carpeta abrir el archivo de pruebas y ejecutar, para pruebas propias se recomienda la creacion de imagenes homogeneas para una aplicacion correcta de las funciones

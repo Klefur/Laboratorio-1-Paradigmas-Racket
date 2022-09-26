@@ -39,7 +39,7 @@
 ;0 1
 ;1 0
 
-;El resto de los ejemplos, los puede obtener directamente desde las tablas presentadas en el enunciado. 
+El resto de los ejemplos, los puede obtener directamente desde las tablas presentadas en el enunciado. 
 
 (bitmap? img1) ; la respuesta debería ser #f
 (bitmap? img2)  ; la respuesta debería ser #t

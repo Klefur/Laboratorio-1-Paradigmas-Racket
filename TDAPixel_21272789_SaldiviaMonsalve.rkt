@@ -32,7 +32,7 @@
 ;Rec: Boolean
 ;Descripcion: Se verifica si el pixel es pixbit-d
 (define (pixbit-d? pixel)
-  (if (list? pixel)
+  (if (and (list? pixel) (not (null? pixel)))
       (if (= (length pixel) 4)
           (if (number? (caddr pixel))
               (or (= (caddr pixel) 1) (= (caddr pixel) 0))
@@ -44,7 +44,7 @@
 ;Rec: Boolean
 ;Descripcion: Se verifica si el pixel es pixrgb-d
 (define (pixrgb-d? pixel)
-  (if (list? pixel)
+  (if  (and (list? pixel) (not (null? pixel)))
       (if (= (length pixel) 4)
           (if (list? (caddr pixel))
               (andmap (lambda (c) (and (>= c 0) (<= c 255))) (caddr pixel))
@@ -56,7 +56,7 @@
 ;Rec: Boolean
 ;Descripcion: Se verifica si el pixel es pixhex-d
 (define (pixhex-d? pixel)
-  (if (list? pixel)
+  (if (and (list? pixel) (not (null? pixel)))
       (if (= (length pixel) 4)
           (if (string? (caddr pixel))
               (and (equal? (string-ref (caddr pixel) 0) #\#) (= (string-length (caddr pixel)) 7))

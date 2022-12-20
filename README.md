@@ -10,7 +10,7 @@
 **Algunas funciones en el archivo de pruebas presentaran diferencias respecto al [documento](https://docs.google.com/document/d/1hUAooKwBj3TWv-yuzBZtNbuaC8iNkzOZdbLpD8P9B8c/edit#), dado que presentaban errores de definicion o habia falta de estas (como se puede ver en img1 la sobra de parentesis o el llamado de img17 a pesar de ser inexistente)**
 Este es el respositorio del **laboratorio 1** del curso de Paradigmas de Programación. Donde se trabaja el paradigma funcional, a traves del lenguaje de programación Racket, con el proposito de crear una aplicacion estilo photoshop.
 
-Donde se compone de [TDA Image](https://github.com/Klefur/Laboratorio-1-Paradigmas-Racket/blob/main/TDAImage_21272789_SaldiviaMonsalve.rkt) donde se define la construccion de la imagen junto con todas sus funciones modificadoras, [TDA Pixel](https://github.com/Klefur/Laboratorio-1-Paradigmas-Racket/blob/main/TDAPixel_21272789_SaldiviaMonsalve.rkt) donde se establecen los tipos de pixeles que se usaran en las imagenes ademas de sus respectivos modificadores, se logro hacer **22/22 funciones**.
+Donde se compone de [TDA Image](https://github.com/Klefur/Laboratorio-1-Paradigmas-Racket/blob/main/TDAImage.rkt) donde se define la construccion de la imagen junto con todas sus funciones modificadoras, [TDA Pixel](https://github.com/Klefur/Laboratorio-1-Paradigmas-Racket/blob/main/TDAPixel.rkt) donde se establecen los tipos de pixeles que se usaran en las imagenes ademas de sus respectivos modificadores, se logro hacer **22/22 funciones**.
 
 ## Prerrequisitos
 
@@ -24,4 +24,4 @@ Clonar el repositorio para acceder a los archivos de manera mas rapida:
 git clone https://github.com/Klefur/Laboratorio-1-Paradigmas-Racket.git
 ```
 
-luego teniendo los 3 archivos en una misma carpeta abrir el [archivo de pruebas](https://github.com/Klefur/Laboratorio-1-Paradigmas-Racket/blob/main/pruebas_21272789_SaldiviaMonsalve.rkt) y ejecutar, para pruebas propias se recomienda la creacion de imagenes homogeneas para una aplicacion correcta de las funciones
+luego teniendo los 3 archivos en una misma carpeta abrir el [archivo de pruebas](https://github.com/Klefur/Laboratorio-1-Paradigmas-Racket/blob/main/pruebas.rkt) y ejecutar, para pruebas propias se recomienda la creacion de imagenes homogeneas para una aplicacion correcta de las funciones
